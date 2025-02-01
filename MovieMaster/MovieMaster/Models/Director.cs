@@ -1,0 +1,10 @@
+﻿namespace MovieMaster.Models
+{
+    public class Director
+    {
+        public int ID { get; set; }
+        public string Name_Director { get; set; } 
+        public DateTime Birthdate { get; set; }
+        public string Country { get; set; } 
+    }
+}
