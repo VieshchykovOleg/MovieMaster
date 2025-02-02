@@ -16,12 +16,8 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = E:\University\practice2025\MovieMaster\MovieMaster
 build_property._RazorSourceGeneratorDebug = 
 
-[E:/University/practice2025/MovieMaster/MovieMaster/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/University/practice2025/MovieMaster/MovieMaster/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+[E:/University/practice2025/MovieMaster/MovieMaster/Views/Movies/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aWVzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/University/practice2025/MovieMaster/MovieMaster/Views/Shared/Error.cshtml]

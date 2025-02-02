@@ -1,0 +1,25 @@
+﻿@model IEnumerable<MovieMaster.Models.Movie>
+
+<h1>Movies List</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Release Year</th>
+            <th>Genre</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Release_Year</td>
+                <td>@movie.Genre</td>
+                <td>@movie.Txt_Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
