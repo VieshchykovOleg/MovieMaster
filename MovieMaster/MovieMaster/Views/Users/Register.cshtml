@@ -1,0 +1,37 @@
+﻿@model MovieMaster.Models.User
+
+<h2>Register</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="Name_User" class="form-label">Name</label>
+        <input type="text" class="form-control" id="Name_User" name="Name_User" asp-for="Name_User" />
+        <span asp-validation-for="Name_User" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="Email" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="Email" name="Email" asp-for="Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="Age" class="form-label">Age</label>
+        <input type="number" class="form-control" id="Age" name="Age" asp-for="Age" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="Occupation" class="form-label">Occupation</label>
+        <input type="text" class="form-control" id="Occupation" name="Occupation" asp-for="Occupation" />
+        <span asp-validation-for="Occupation" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="User_Password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="User_Password" name="User_Password" asp-for="User_Password" />
+        <span asp-validation-for="User_Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>

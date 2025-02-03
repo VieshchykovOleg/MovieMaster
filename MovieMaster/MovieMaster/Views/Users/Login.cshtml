@@ -1,0 +1,19 @@
+﻿@model MovieMaster.Models.User
+
+<h2>Login</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="Email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" asp-for="Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="User_Password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="User_Password" name="password" asp-for="User_Password" />
+        <span asp-validation-for="User_Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
