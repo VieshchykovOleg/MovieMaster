@@ -1,0 +1,31 @@
+﻿@model MovieMaster.Models.Movie
+
+@{
+    ViewData["Title"] = "Edit Movie";
+}
+
+<h1>Edit Movie</h1>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Release_Year" class="control-label"></label>
+        <input asp-for="Release_Year" class="form-control" />
+        <span asp-validation-for="Release_Year" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Genre" class="control-label"></label>
+        <input asp-for="Genre" class="form-control" />
+        <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Txt_Description" class="control-label"></label>
+        <textarea asp-for="Txt_Description" class="form-control"></textarea>
+        <span asp-validation-for="Txt_Description" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

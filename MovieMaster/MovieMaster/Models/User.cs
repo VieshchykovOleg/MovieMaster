@@ -24,5 +24,6 @@ namespace MovieMaster.Models
         [Required]
         [StringLength(255, MinimumLength = 6)] 
         public string User_Password { get; set; }
+        public bool IsAdmin { get; set; } = false;
     }
 }

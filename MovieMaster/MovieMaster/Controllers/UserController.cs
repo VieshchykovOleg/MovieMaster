@@ -27,10 +27,12 @@ namespace MovieMaster.Controllers
 
 
         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Register(User user)
         {
             if (ModelState.IsValid)
             {
+                // Перевірка чи існує користувач з таким же Email
                 var existingUser = await _context.Users
                     .FirstOrDefaultAsync(u => u.Email == user.Email);
 
@@ -40,8 +42,10 @@ namespace MovieMaster.Controllers
                     return View(user);
                 }
 
+               
+                user.IsAdmin = false;
                 var passwordHasher = new PasswordHasher<User>();
-                user.User_Password = passwordHasher.HashPassword(user, user.User_Password); // Хешуємо пароль
+                user.User_Password = passwordHasher.HashPassword(user, user.User_Password);
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
@@ -51,6 +55,7 @@ namespace MovieMaster.Controllers
             return View(user);
         }
 
+
         public IActionResult Login()
         {
             return View();
@@ -59,15 +64,18 @@ namespace MovieMaster.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
+          
             if (string.IsNullOrEmpty(password))
             {
                 ModelState.AddModelError("User_Password", "Password cannot be empty.");
                 return View();
             }
 
+        
             var user = await _context.Users
                                       .FirstOrDefaultAsync(u => u.Email == email);
 
+         
             if (user != null)
             {
                 var passwordHasher = new PasswordHasher<User>();
@@ -75,12 +83,18 @@ namespace MovieMaster.Controllers
 
                 if (passwordVerificationResult == PasswordVerificationResult.Success)
                 {
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(new ClaimsIdentity(new[]
-                        {
-                    new Claim(ClaimTypes.Name, user.Name_User),
-                    new Claim(ClaimTypes.Email, user.Email)
-                        }, CookieAuthenticationDefaults.AuthenticationScheme)));
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Name_User),  
+                new Claim(ClaimTypes.Email, user.Email),     
+                new Claim("IsAdmin", user.IsAdmin.ToString()) 
+            };
+                  
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
                     return RedirectToAction("Index", "Movies");
                 }
@@ -89,6 +103,7 @@ namespace MovieMaster.Controllers
             ModelState.AddModelError("", "Invalid login attempt.");
             return View();
         }
+
 
 
         public async Task<IActionResult> Logout()

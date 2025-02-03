@@ -49,5 +49,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Movies}/{action=Index}/{id?}"
 );
+app.MapControllerRoute(
+    name: "admin",
+    pattern: "Admin/{controller=Index}/{action=Index}/{id?}"
+);
 
 app.Run();

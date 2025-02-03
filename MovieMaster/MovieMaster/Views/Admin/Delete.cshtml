@@ -1,0 +1,18 @@
+﻿@model MovieMaster.Models.Movie
+
+@{
+    ViewData["Title"] = "Delete Movie";
+}
+
+<h1>Are you sure you want to delete this movie?</h1>
+
+<div>
+    <h3>@Model.Title</h3>
+    <p>@Model.Txt_Description</p>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="ID" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">Cancel</a>
+</form>
