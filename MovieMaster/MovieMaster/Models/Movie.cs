@@ -6,6 +6,8 @@
         public string Title { get; set; } 
         public int Release_Year { get; set; }  
         public string Genre { get; set; } 
-        public string Txt_Description { get; set; } 
+        public string Txt_Description { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿@model IEnumerable<MovieMaster.Models.Movie>
+﻿@using System.Linq
+
+@model IEnumerable<MovieMaster.Models.Movie>
 
 <h1>Movies List</h1>
 
@@ -9,6 +11,7 @@
             <th>Release Year</th>
             <th>Genre</th>
             <th>Description</th>
+            <th>Average Rating</th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +22,29 @@
                 <td>@movie.Release_Year</td>
                 <td>@movie.Genre</td>
                 <td>@movie.Txt_Description</td>
+                <td>
+                    @if (movie.Comments != null && movie.Comments.Any())
+                    {
+                        var averageRating = movie.Comments.Average(c => c.Rating) / 10;
+                        <p>Середній рейтинг: @averageRating.ToString("0.0")</p>
+                    }
+                    else
+                    {
+                        <em>Немає оцінок</em>
+                    }
+
+
+                </td>
+                <td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("Details", "Movies", new { id = movie.ID })" class="btn btn-primary">Залишити відгук</a>
+                    }
+                    else
+                    {
+                        <p>Увійдіть, щоб залишити відгук.</p>
+                    }
+                </td>
             </tr>
         }
     </tbody>

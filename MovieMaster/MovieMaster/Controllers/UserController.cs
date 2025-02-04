@@ -27,12 +27,11 @@ namespace MovieMaster.Controllers
 
 
         [HttpPost]
-        [HttpPost]
         public async Task<IActionResult> Register(User user)
         {
             if (ModelState.IsValid)
             {
-                // Перевірка чи існує користувач з таким же Email
+              
                 var existingUser = await _context.Users
                     .FirstOrDefaultAsync(u => u.Email == user.Email);
 
@@ -64,18 +63,15 @@ namespace MovieMaster.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-          
             if (string.IsNullOrEmpty(password))
             {
                 ModelState.AddModelError("User_Password", "Password cannot be empty.");
                 return View();
             }
 
-        
             var user = await _context.Users
                                       .FirstOrDefaultAsync(u => u.Email == email);
 
-         
             if (user != null)
             {
                 var passwordHasher = new PasswordHasher<User>();
@@ -85,18 +81,17 @@ namespace MovieMaster.Controllers
                 {
                     var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Name_User),  
-                new Claim(ClaimTypes.Email, user.Email),     
-                new Claim("IsAdmin", user.IsAdmin.ToString()) 
+                new Claim(ClaimTypes.Name, user.Name_User),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("IsAdmin", user.IsAdmin.ToString())
             };
-                  
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-                    return RedirectToAction("Index", "Movies");
+                    return RedirectToAction("Index", "Movies"); 
                 }
             }
 
@@ -106,10 +101,12 @@ namespace MovieMaster.Controllers
 
 
 
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Movies");
+            return RedirectToAction("Index", "Movies");  
         }
+
     }
 }

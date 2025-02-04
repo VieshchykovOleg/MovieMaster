@@ -1,0 +1,62 @@
+﻿@model MovieMaster.Models.Movie
+
+<h2>@Model.Title</h2>
+<p><strong>Рік випуску:</strong> @Model.Release_Year</p>
+<p><strong>Жанр:</strong> @Model.Genre</p>
+<p><strong>Опис:</strong> @Model.Txt_Description</p>
+
+@if (ViewBag.AverageRating != null)
+{
+    <p><strong>Середній рейтинг:</strong> @ViewBag.AverageRating.ToString("0.0")</p>
+}
+else
+{
+    <p><strong>Середній рейтинг:</strong> Немає оцінок</p>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <h3>Додати коментар</h3>
+    <form asp-controller="Comments" asp-action="AddComment" method="post">
+        <input type="hidden" name="movieId" value="@Model.ID" />
+        <div class="mb-3">
+            <textarea name="content" class="form-control" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Оцінка (1-10):</label>
+            <input type="number" name="rating" min="1" max="10" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Додати</button>
+    </form>
+}
+else
+{
+    <p><a href="/Users/Login">Увійдіть</a>, щоб залишити коментар.</p>
+}
+
+<h3>Коментарі:</h3>
+<div id="comments-section">
+    @if (Model.Comments != null && Model.Comments.Any())
+    {
+        foreach (var comment in Model.Comments)
+        {
+            <div class="comment">
+                @if (comment.User != null)
+                {
+                    <p><strong>@comment.User.Name_User</strong> (@comment.CreatedAt.ToString("g"))</p>
+                }
+                else
+                {
+                    <p><strong>Користувач не знайдений</strong> (@comment.CreatedAt.ToString("g"))</p>
+                }
+                <p>Оцінка: @comment.Rating/10</p>
+                <p>@comment.Content</p>
+                <hr />
+            </div>
+        }
+    }
+    else
+    {
+        <p>Немає коментарів</p>
+    }
+</div>

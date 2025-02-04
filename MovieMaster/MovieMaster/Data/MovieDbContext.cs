@@ -15,6 +15,8 @@ namespace MovieMaster.Data
         public DbSet<Director> Directors { get; set; }
         public DbSet<ActorMovie> ActorsMovies { get; set; }
         public DbSet<DirectorMovie> DirectorsMovies { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
