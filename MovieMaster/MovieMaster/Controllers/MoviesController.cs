@@ -15,44 +15,52 @@ namespace MovieMaster.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string title, int? year, int? rating, string genre)
+        public async Task<IActionResult> Index(string title, int? releaseYear, int? rating, string actor, string director)
         {
-            var moviesQuery = _context.Movies
-                .Include(m => m.Comments)
-                .AsQueryable();
+            var moviesQuery = _context.Movies.AsQueryable();
 
+            // Фільтрація за назвою
             if (!string.IsNullOrEmpty(title))
             {
                 moviesQuery = moviesQuery.Where(m => m.Title.Contains(title));
             }
 
-            if (year.HasValue)
+            // Фільтрація за роком випуску
+            if (releaseYear.HasValue)
             {
-                moviesQuery = moviesQuery.Where(m => m.Release_Year == year);
+                moviesQuery = moviesQuery.Where(m => m.Release_Year == releaseYear);
             }
 
-            if (!string.IsNullOrEmpty(genre))
-            {
-                moviesQuery = moviesQuery.Where(m => m.Genre.Contains(genre));
-            }
-
+            // Фільтрація за рейтингом
             if (rating.HasValue)
             {
-                moviesQuery = moviesQuery.Where(m => m.Comments.Any() &&
-                                                     Math.Round(m.Comments.Average(c => c.Rating)) == rating.Value);
+                moviesQuery = moviesQuery.Where(m => m.Comments.Any(c => c.Rating == rating.Value));
+            }
+
+            // Фільтрація за актором
+            if (!string.IsNullOrEmpty(actor))
+            {
+                moviesQuery = moviesQuery.Where(m => m.ActorsMovies
+                                                       .Any(am => am.Actor.Name_Actor.Contains(actor)));
+            }
+
+            // Фільтрація за режисером
+            if (!string.IsNullOrEmpty(director))
+            {
+                moviesQuery = moviesQuery.Where(m => m.DirectorsMovies
+                                                       .Any(dm => dm.Director.Name_Director.Contains(director)));
             }
 
             var movies = await moviesQuery
+                .Include(m => m.Comments)
+                .Include(m => m.ActorsMovies)
+                .ThenInclude(am => am.Actor)
+                .Include(m => m.DirectorsMovies)  
+                .ThenInclude(dm => dm.Director)  
                 .ToListAsync();
-
-            movies = movies
-                .OrderByDescending(m => m.Comments.Any() ? m.Comments.Average(c => c.Rating) : 0)
-                .ToList();
 
             return View(movies);
         }
-
-
 
 
         public async Task<IActionResult> Details(int id)

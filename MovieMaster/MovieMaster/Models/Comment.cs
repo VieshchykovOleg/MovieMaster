@@ -29,7 +29,7 @@ namespace MovieMaster.Models
         [Range(1, 10)]
         public int Rating { get; set; }
 
-        [Column("Created_At")]  // Вказуємо правильне ім'я стовпця в базі даних
-        public DateTime CreatedAt { get; set; }  // Використовуємо зручну назву для C#
+        [Column("Created_At")]  
+        public DateTime CreatedAt { get; set; }  
     }
 }

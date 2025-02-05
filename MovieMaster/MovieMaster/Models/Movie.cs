@@ -9,5 +9,7 @@
         public string Txt_Description { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<ActorMovie> ActorsMovies { get; set; }
+        public ICollection<DirectorMovie> DirectorsMovies { get; set; }
     }
 }
