@@ -15,16 +15,43 @@ namespace MovieMaster.Controllers
         {
             _context = context;
         }
-
-        // Відображення списку фільмів
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string title, int? year, int? rating, string genre)
         {
-            var movies = await _context.Movies
-                .Include(m => m.Comments) // Завантажуємо коментарі
+            var moviesQuery = _context.Movies
+                .Include(m => m.Comments)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                moviesQuery = moviesQuery.Where(m => m.Title.Contains(title));
+            }
+
+            if (year.HasValue)
+            {
+                moviesQuery = moviesQuery.Where(m => m.Release_Year == year);
+            }
+
+            if (!string.IsNullOrEmpty(genre))
+            {
+                moviesQuery = moviesQuery.Where(m => m.Genre.Contains(genre));
+            }
+
+            if (rating.HasValue)
+            {
+                moviesQuery = moviesQuery.Where(m => m.Comments.Any() &&
+                                                     Math.Round(m.Comments.Average(c => c.Rating)) == rating.Value);
+            }
+
+            var movies = await moviesQuery
                 .ToListAsync();
+
+            movies = movies
+                .OrderByDescending(m => m.Comments.Any() ? m.Comments.Average(c => c.Rating) : 0)
+                .ToList();
 
             return View(movies);
         }
+
 
 
 
