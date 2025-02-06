@@ -15,7 +15,7 @@ namespace MovieMaster.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string title, int? releaseYear, int? rating, string actor, string director)
+        public async Task<IActionResult> Index(string title, int? releaseYear, int? rating, string actor, string genre)
         {
             var moviesQuery = _context.Movies.AsQueryable();
 
@@ -44,23 +44,23 @@ namespace MovieMaster.Controllers
                                                        .Any(am => am.Actor.Name_Actor.Contains(actor)));
             }
 
-            // Фільтрація за режисером
-            if (!string.IsNullOrEmpty(director))
+            // Фільтрація за жанром
+            if (!string.IsNullOrEmpty(genre))
             {
-                moviesQuery = moviesQuery.Where(m => m.DirectorsMovies
-                                                       .Any(dm => dm.Director.Name_Director.Contains(director)));
+                moviesQuery = moviesQuery.Where(m => m.GenreInfo.Genre_Name.Contains(genre)); // Фільтруємо за жанром
             }
+
 
             var movies = await moviesQuery
                 .Include(m => m.Comments)
                 .Include(m => m.ActorsMovies)
                 .ThenInclude(am => am.Actor)
-                .Include(m => m.DirectorsMovies)  
-                .ThenInclude(dm => dm.Director)  
+                .Include(m => m.GenreInfo)
                 .ToListAsync();
 
             return View(movies);
         }
+
 
 
         public async Task<IActionResult> Details(int id)

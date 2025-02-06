@@ -2,59 +2,72 @@
 @using Microsoft.AspNetCore.Http
 @model IEnumerable<MovieMaster.Models.Movie>
 
-<h1>Movies List</h1>
+<h1 class="text-center my-4">🎬 Movies List</h1>
 
-<form method="get" class="form-inline mb-4">
-    <div class="form-group">
-        <label for="title" class="mr-2">Title:</label>
-        <input type="text" id="title" name="title" class="form-control" value="@Context.Request.Query["title"]" />
-    </div>
+<!-- Кнопка для відкриття фільтрів -->
+<div class="text-center mb-4">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#filterPanel">
+        🔍 Фільтрація
+    </button>
+</div>
 
-    <div class="form-group ml-3">
-        <label for="releaseYear" class="mr-2">Release Year:</label>
-        <input type="number" id="releaseYear" name="releaseYear" class="form-control" value="@Context.Request.Query["releaseYear"]" />
-    </div>
+<!-- Панель фільтрації -->
+<div id="filterPanel" class="collapse">
+    <form method="get" class="card card-body shadow-sm p-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="title" class="form-label">Назва фільму</label>
+                <input type="text" id="title" name="title" class="form-control" value="@Context.Request.Query["title"]" placeholder="Введіть назву" />
+            </div>
 
-    <div class="form-group ml-3">
-        <label for="genre" class="mr-2">Genre:</label>
-        <input type="text" id="genre" name="genre" class="form-control" value="@Context.Request.Query["genre"]" />
-    </div>
+            <div class="col-md-4">
+                <label for="releaseYear" class="form-label">Рік випуску</label>
+                <input type="number" id="releaseYear" name="releaseYear" class="form-control" value="@Context.Request.Query["releaseYear"]" placeholder="Наприклад, 2020" />
+            </div>
 
-    <div class="form-group ml-3">
-        <label for="rating" class="mr-2">Rating:</label>
-        <select id="rating" name="rating" class="form-control">
-            <option value="">All</option>
-            @for (int i = 10; i >= 1; i--)
-            {
-                <option value="@i" selected="@(Context.Request.Query["rating"] == i.ToString())">@i</option>
-            }
-        </select>
-    </div>
+            <div class="col-md-4">
+                <label for="genre" class="form-label">Жанр</label>
+                <input type="text" id="genre" name="genre" class="form-control" value="@Context.Request.Query["genre"]" placeholder="Введіть жанр" />
+            </div>
 
-    <div class="form-group ml-3">
-        <label for="actor" class="mr-2">Actor:</label>
-        <input type="text" id="actor" name="actor" class="form-control" value="@Context.Request.Query["actor"]" placeholder="Enter actor name" />
-    </div>
+            <div class="col-md-4">
+                <label for="rating" class="form-label">Рейтинг</label>
+                <select id="rating" name="rating" class="form-control">
+                    <option value="">Всі</option>
+                    @for (int i = 10; i >= 1; i--)
+                    {
+                        <option value="@i" selected="@(Context.Request.Query["rating"] == i.ToString())">@i</option>
+                    }
+                </select>
+            </div>
 
-    <div class="form-group ml-3">
-        <label for="director" class="mr-2">Director:</label>
-        <input type="text" id="director" name="director" class="form-control" value="@Context.Request.Query["director"]" placeholder="Enter director name" />
-    </div>
+            <div class="col-md-4">
+                <label for="actor" class="form-label">Актор</label>
+                <input type="text" id="actor" name="actor" class="form-control" value="@Context.Request.Query["actor"]" placeholder="Введіть ім'я актора" />
+            </div>
 
+            <div class="col-md-4">
+                <label for="director" class="form-label">Режисер</label>
+                <input type="text" id="director" name="director" class="form-control" value="@Context.Request.Query["director"]" placeholder="Введіть ім'я режисера" />
+            </div>
+        </div>
 
-    <button type="submit" class="btn btn-primary ml-3">Filter</button>
-</form>
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success">🔍 Застосувати фільтр</button>
+        </div>
+    </form>
+</div>
 
-
-
-<table class="table">
-    <thead>
+<!-- Таблиця з фільмами -->
+<table class="table table-hover mt-4">
+    <thead class="table-dark">
         <tr>
-            <th>Title</th>
-            <th>Release Year</th>
-            <th>Genre</th>
-            <th>Description</th>
-            <th>Average Rating</th>
+            <th>Назва</th>
+            <th>Рік випуску</th>
+            <th>Жанр</th>
+            <th>Опис</th>
+            <th>Середній рейтинг</th>
+            <th>Дія</th>
         </tr>
     </thead>
     <tbody>
@@ -63,13 +76,13 @@
             <tr>
                 <td>@movie.Title</td>
                 <td>@movie.Release_Year</td>
-                <td>@movie.Genre</td>
+                <td>@movie.GenreInfo.Genre_Name</td>
                 <td>@movie.Txt_Description</td>
                 <td>
                     @if (movie.Comments != null && movie.Comments.Any())
                     {
                         var averageRating = movie.Comments.Average(c => c.Rating) / 10;
-                        <p>Середній рейтинг: @averageRating.ToString("0.0")</p>
+                        <p>⭐ @averageRating.ToString("0.0")</p>
                     }
                     else
                     {
@@ -79,14 +92,15 @@
                 <td>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a href="@Url.Action("Details", "Movies", new { id = movie.ID })" class="btn btn-primary">Залишити відгук</a>
+                        <a href="@Url.Action("Details", "Movies", new { id = movie.ID })" class="btn btn-primary btn-sm">💬 Відгук</a>
                     }
                     else
                     {
-                        <p>Увійдіть, щоб залишити відгук.</p>
+                        <p class="text-muted">🔒 Увійдіть для відгуку</p>
                     }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+

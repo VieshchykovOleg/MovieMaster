@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MovieMaster.Data;
 using MovieMaster.Models;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace MovieMaster.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Movies");
 
-            var movies = _context.Movies.ToList();
+            var movies = _context.Movies.Include(m => m.GenreInfo).ToList();
             return View(movies);
         }
 

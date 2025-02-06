@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieMaster.Models;
-using System.IO;
 
 namespace MovieMaster.Data
 {
@@ -11,7 +10,7 @@ namespace MovieMaster.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Rating> Ratings { get; set; }
-        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Genre> Genres { get; set; } 
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Director> Directors { get; set; }
         public DbSet<ActorMovie> ActorsMovies { get; set; }
@@ -48,6 +47,13 @@ namespace MovieMaster.Data
                 .HasOne(am => am.Movie)
                 .WithMany(m => m.ActorsMovies)
                 .HasForeignKey(am => am.Movie_ID);
+
+            modelBuilder.Entity<Movie>()
+                .HasOne(m => m.GenreInfo)
+                .WithMany(g => g.Movies)
+                .HasForeignKey(m => m.Genre_ID);
+
+            
         }
     }
 }

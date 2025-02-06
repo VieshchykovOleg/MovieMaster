@@ -25,7 +25,9 @@
                 <td>@movie.ID</td>
                 <td>@movie.Title</td>
                 <td>@movie.Release_Year</td>
-                <td>@movie.Genre</td>
+                <td>@(movie.GenreInfo?.Genre_Name ?? "No Genre")</td>
+
+
                 <td>
                     <a href="@Url.Action("Edit", "Admin", new { id = movie.ID })" class="btn btn-warning">Edit</a>
                     <a href="@Url.Action("Delete", "Admin", new { id = movie.ID })" class="btn btn-danger">Delete</a>
