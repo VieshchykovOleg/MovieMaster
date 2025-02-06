@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MovieMaster.Data;
 using MovieMaster.Models;
 using System.Linq;
@@ -21,11 +20,11 @@ namespace MovieMaster.Controllers
                    bool.TryParse(User.Claims.FirstOrDefault(c => c.Type == "IsAdmin")?.Value, out bool isAdmin) &&
                    isAdmin;
         }
+
         public IActionResult Index()
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Movies");
-
-            var movies = _context.Movies.Include(m => m.GenreInfo).ToList();
+            var movies = _context.Movies.ToList();
             return View(movies);
         }
 
@@ -33,28 +32,37 @@ namespace MovieMaster.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Movies");
 
+            
+            ViewBag.Genres = _context.Genres.ToList();
+
             return View();
         }
+
 
         [HttpPost]
         public IActionResult Create(Movie movie)
         {
             if (ModelState.IsValid && IsAdmin())
             {
+                // Переконайтеся, що жанр існує
+                movie.Genre = _context.Genres.FirstOrDefault(g => g.ID == movie.Genre_ID);
+
                 _context.Movies.Add(movie);
                 _context.SaveChanges();
-                return RedirectToAction("Index", "Movies");
+
+                return RedirectToAction("Index");
             }
 
+            ViewBag.Genres = _context.Genres.ToList(); 
             return View(movie);
         }
+
+
         public IActionResult Edit(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Movies");
-
             var movie = _context.Movies.Find(id);
             if (movie == null) return NotFound();
-
             return View(movie);
         }
 
@@ -62,7 +70,6 @@ namespace MovieMaster.Controllers
         public IActionResult Edit(int id, Movie movie)
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Movies");
-
             if (ModelState.IsValid)
             {
                 _context.Movies.Update(movie);
@@ -75,10 +82,8 @@ namespace MovieMaster.Controllers
         public IActionResult Delete(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Movies");
-
             var movie = _context.Movies.Find(id);
             if (movie == null) return NotFound();
-
             _context.Movies.Remove(movie);
             _context.SaveChanges();
             return RedirectToAction("Index", "Movies");

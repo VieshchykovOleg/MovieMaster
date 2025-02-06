@@ -49,7 +49,7 @@ namespace MovieMaster.Data
                 .HasForeignKey(am => am.Movie_ID);
 
             modelBuilder.Entity<Movie>()
-                .HasOne(m => m.GenreInfo)
+                .HasOne(m => m.Genre_Name)
                 .WithMany(g => g.Movies)
                 .HasForeignKey(m => m.Genre_ID);
 

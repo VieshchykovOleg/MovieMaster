@@ -47,7 +47,7 @@ namespace MovieMaster.Controllers
             // Фільтрація за жанром
             if (!string.IsNullOrEmpty(genre))
             {
-                moviesQuery = moviesQuery.Where(m => m.GenreInfo.Genre_Name.Contains(genre)); // Фільтруємо за жанром
+                moviesQuery = moviesQuery.Where(m => m.Genre.Genre_Name.Contains(genre)); // Фільтруємо за жанром
             }
 
 
@@ -55,7 +55,7 @@ namespace MovieMaster.Controllers
                 .Include(m => m.Comments)
                 .Include(m => m.ActorsMovies)
                 .ThenInclude(am => am.Actor)
-                .Include(m => m.GenreInfo)
+                .Include(m => m.Genre)
                 .ToListAsync();
 
             return View(movies);
