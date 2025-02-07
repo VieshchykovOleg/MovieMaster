@@ -18,14 +18,13 @@ namespace MovieMaster.Controllers
             _context = context;
         }
         [HttpPost]
-        [HttpPost]
         public async Task<IActionResult> AddComment(int movieId, string content, int rating)
         {
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Users");  
             }
-
+           
           
             var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 

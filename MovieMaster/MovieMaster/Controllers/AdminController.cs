@@ -31,32 +31,34 @@ namespace MovieMaster.Controllers
         public IActionResult Create()
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Movies");
-
-            
-            ViewBag.Genres = _context.Genres.ToList();
-
             return View();
         }
-
 
         [HttpPost]
         public IActionResult Create(Movie movie)
         {
-            if (ModelState.IsValid && IsAdmin())
-            {
-                // Переконайтеся, що жанр існує
-                movie.Genre = _context.Genres.FirstOrDefault(g => g.ID == movie.Genre_ID);
+            
+                if (!ModelState.IsValid)
+                {
+                    
+                    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        Console.WriteLine($"Validation Error: {error.ErrorMessage}");
+                    }
 
+                    return View(movie);
+                }
+
+                if (!IsAdmin())
+                {
+                    return RedirectToAction("Index", "Movies");
+                }
                 _context.Movies.Add(movie);
                 _context.SaveChanges();
 
                 return RedirectToAction("Index");
-            }
 
-            ViewBag.Genres = _context.Genres.ToList(); 
-            return View(movie);
-        }
-
+    }
 
         public IActionResult Edit(int id)
         {

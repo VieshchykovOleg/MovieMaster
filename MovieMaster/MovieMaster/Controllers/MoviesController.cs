@@ -15,59 +15,60 @@ namespace MovieMaster.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string title, int? releaseYear, int? rating, string actor, string genre)
+
+        public async Task<IActionResult> Index(string title, int? releaseYear, int? rating, string actor,string director, string genre, bool? sortByRating)
         {
             var moviesQuery = _context.Movies.AsQueryable();
 
-            // Фільтрація за назвою
             if (!string.IsNullOrEmpty(title))
             {
                 moviesQuery = moviesQuery.Where(m => m.Title.Contains(title));
             }
-
-            // Фільтрація за роком випуску
             if (releaseYear.HasValue)
             {
                 moviesQuery = moviesQuery.Where(m => m.Release_Year == releaseYear);
             }
 
-            // Фільтрація за рейтингом
             if (rating.HasValue)
             {
                 moviesQuery = moviesQuery.Where(m => m.Comments.Any(c => c.Rating == rating.Value));
             }
 
-            // Фільтрація за актором
             if (!string.IsNullOrEmpty(actor))
             {
                 moviesQuery = moviesQuery.Where(m => m.ActorsMovies
                                                        .Any(am => am.Actor.Name_Actor.Contains(actor)));
             }
-
-            // Фільтрація за жанром
-            if (!string.IsNullOrEmpty(genre))
+            if (!string.IsNullOrEmpty(director))
             {
-                moviesQuery = moviesQuery.Where(m => m.Genre.Genre_Name.Contains(genre)); // Фільтруємо за жанром
+                moviesQuery = moviesQuery.Where(m => m.DirectorsMovies
+                                                       .Any(dm => dm.Director.Name_Director.Contains(director)));
             }
 
+            if (!string.IsNullOrEmpty(genre))
+            {
+                moviesQuery = moviesQuery.Where(m => m.Genre.Contains(genre));
+            }
 
             var movies = await moviesQuery
                 .Include(m => m.Comments)
                 .Include(m => m.ActorsMovies)
                 .ThenInclude(am => am.Actor)
-                .Include(m => m.Genre)
                 .ToListAsync();
+
+            if (sortByRating.HasValue && sortByRating.Value)
+            {
+                movies = movies.OrderBy(m => m.Comments.Any() ? m.Comments.Average(c => c.Rating) : 0).ToList();
+            }
 
             return View(movies);
         }
 
-
-
         public async Task<IActionResult> Details(int id)
         {
             var movie = await _context.Movies
-                .Include(m => m.Comments) 
-                .ThenInclude(c => c.User) 
+                .Include(m => m.Comments)
+                .ThenInclude(c => c.User)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (movie == null)
@@ -80,8 +81,5 @@ namespace MovieMaster.Controllers
 
             return View(movie);
         }
-
-
-
     }
 }

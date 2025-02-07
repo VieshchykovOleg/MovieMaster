@@ -4,35 +4,37 @@
 
 <h1 class="text-center my-4">🎬 Movies List</h1>
 
-<!-- Кнопка для відкриття фільтрів -->
 <div class="text-center mb-4">
     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#filterPanel">
         🔍 Фільтрація
     </button>
 </div>
-
-<!-- Панель фільтрації -->
 <div id="filterPanel" class="collapse">
     <form method="get" class="card card-body shadow-sm p-4">
+        <h5 class="text-center mb-3"><i class="bi bi-funnel"></i> Фільтри</h5>
+
         <div class="row g-3">
             <div class="col-md-4">
-                <label for="title" class="form-label">Назва фільму</label>
-                <input type="text" id="title" name="title" class="form-control" value="@Context.Request.Query["title"]" placeholder="Введіть назву" />
+                <label for="title" class="form-label fw-bold">🎬 Назва фільму</label>
+                <input type="text" id="title" name="title" class="form-control"
+                       value="@Context.Request.Query["title"]" placeholder="Введіть назву" />
             </div>
 
             <div class="col-md-4">
-                <label for="releaseYear" class="form-label">Рік випуску</label>
-                <input type="number" id="releaseYear" name="releaseYear" class="form-control" value="@Context.Request.Query["releaseYear"]" placeholder="Наприклад, 2020" />
+                <label for="releaseYear" class="form-label fw-bold">📅 Рік випуску</label>
+                <input type="number" id="releaseYear" name="releaseYear" class="form-control"
+                       value="@Context.Request.Query["releaseYear"]" placeholder="Наприклад, 2020" />
             </div>
 
             <div class="col-md-4">
-                <label for="genre" class="form-label">Жанр</label>
-                <input type="text" id="genre" name="genre" class="form-control" value="@Context.Request.Query["genre"]" placeholder="Введіть жанр" />
+                <label for="genre" class="form-label fw-bold">🎭 Жанр</label>
+                <input type="text" id="genre" name="genre" class="form-control"
+                       value="@Context.Request.Query["genre"]" placeholder="Введіть жанр" />
             </div>
 
             <div class="col-md-4">
-                <label for="rating" class="form-label">Рейтинг</label>
-                <select id="rating" name="rating" class="form-control">
+                <label for="rating" class="form-label fw-bold">⭐ Рейтинг</label>
+                <select id="rating" name="rating" class="form-select">
                     <option value="">Всі</option>
                     @for (int i = 10; i >= 1; i--)
                     {
@@ -42,23 +44,28 @@
             </div>
 
             <div class="col-md-4">
-                <label for="actor" class="form-label">Актор</label>
-                <input type="text" id="actor" name="actor" class="form-control" value="@Context.Request.Query["actor"]" placeholder="Введіть ім'я актора" />
+                <label for="actor" class="form-label fw-bold">🎭 Актор</label>
+                <input type="text" id="actor" name="actor" class="form-control"
+                       value="@Context.Request.Query["actor"]" placeholder="Введіть ім'я актора" />
             </div>
 
             <div class="col-md-4">
-                <label for="director" class="form-label">Режисер</label>
-                <input type="text" id="director" name="director" class="form-control" value="@Context.Request.Query["director"]" placeholder="Введіть ім'я режисера" />
+                <label for="director" class="form-label fw-bold">🎬 Режисер</label>
+                <input type="text" id="director" name="director" class="form-control"
+                       value="@Context.Request.Query["director"]" placeholder="Введіть ім'я режисера" />
             </div>
         </div>
 
         <div class="text-center mt-4">
-            <button type="submit" class="btn btn-success">🔍 Застосувати фільтр</button>
+            <a href="@Url.Action("Index", new { sortByRating = true })" class="btn btn-outline-primary">
+                🔼 Сортувати за рейтингом (зростання)
+            </a>
+            <button type="submit" class="btn btn-success ms-2">🔍 Застосувати фільтр</button>
         </div>
+
     </form>
 </div>
 
-<!-- Таблиця з фільмами -->
 <table class="table table-hover mt-4">
     <thead class="table-dark">
         <tr>
@@ -76,7 +83,7 @@
             <tr>
                 <td>@movie.Title</td>
                 <td>@movie.Release_Year</td>
-                <td>@movie.Genre_Name</td>
+                <td>@movie.Genre</td>
                 <td>@movie.Txt_Description</td>
                 <td>
                     @if (movie.Comments != null && movie.Comments.Any())
